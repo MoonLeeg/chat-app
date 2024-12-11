@@ -15,7 +15,7 @@
 
 1. Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/<your-username>/chat-app.git
+   git clone https://github.com/MoonLeeg/chat-app.git
    cd chat-app
 Убедитесь, что у вас установлен Go. Вы можете скачать его с официального сайта.
 
