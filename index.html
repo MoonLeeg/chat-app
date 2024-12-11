@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+</head>
+<body>
+    <h1>Chat App</h1>
+    <input type="text" id="message" placeholder="Type your message">
+    <button id="send">Send</button>
+    <ul id="messages"></ul>
+    
+    <script>
+        const token = "JWT_TOKEN";
+        const chat_id = 1; // Определяем chat_id здесь для использования в fetch
+        const ws = new WebSocket(`ws://localhost:8080/ws?token=${token}`);
+
+        // Загружаем существующие сообщения при загрузке страницы
+        fetch(`http://localhost:8080/chats/${chat_id}/messages`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(msg => {
+                    const li = document.createElement('li');
+                    li.textContent = msg.content;
+                    document.getElementById('messages').appendChild(li);
+                });
+            });
+
+        ws.onmessage = function(event) {
+            const msg = JSON.parse(event.data);
+            const li = document.createElement('li');
+            li.textContent = msg.content;
+            document.getElementById('messages').appendChild(li);
+        };
+
+        document.getElementById('send').onclick = function() {
+            const msg = {
+                chat_id: chat_id,
+                user_id: 1,
+                content: document.getElementById('message').value
+            };
+            ws.send(JSON.stringify(msg));
+            document.getElementById('message').value = '';
+        };
+    </script>
+</body>
+</html>
